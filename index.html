@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equity Split</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='78' font-size='80' text-anchor='middle'>⚖️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(165deg, #F7F5F0 0%, #EDE8E0 50%, #E4DED4 100%);
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px 60px;
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { width: 100%; max-width: 480px; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 36px; }
+    .header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: #1A1A1A;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .header p { font-size: 15px; color: #777; font-weight: 400; }
+
+    /* Card */
+    .card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    /* Income Row */
+    .income-row { display: flex; gap: 14px; margin-bottom: 20px; }
+    .income-card { flex: 1; min-width: 0; }
+    .income-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .avatar-t { background: #2D6A4F; }
+    .avatar-a { background: #9B5DE5; }
+    .income-label { font-size: 13px; font-weight: 600; color: #333; }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .dollar-sm {
+      position: absolute; left: 12px; font-size: 15px;
+      color: #999; font-weight: 500; pointer-events: none;
+    }
+    .input-sm {
+      width: 100%; border: 1.5px solid #E0DCD6; border-radius: 10px;
+      padding: 10px 12px 10px 28px; font-size: 16px;
+      font-family: 'DM Sans', sans-serif; color: #1A1A1A;
+      outline: none; background: #FAFAF8;
+      transition: border-color 0.2s;
+    }
+    .input-sm:focus { border-color: #2D6A4F; }
+    .hint { font-size: 10.5px; color: #AAA; margin-top: 4px; display: block; }
+
+    /* Expense */
+    .expense-block { margin-bottom: 20px; }
+    .expense-label { font-size: 13px; font-weight: 600; color: #333; display: block; margin-bottom: 8px; }
+    .dollar-lg {
+      position: absolute; left: 16px; font-size: 20px;
+      color: #999; font-weight: 500; pointer-events: none;
+    }
+    .input-lg {
+      width: 100%; border: 1.5px solid #E0DCD6; border-radius: 12px;
+      padding: 14px 16px 14px 36px; font-size: 22px;
+      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      color: #1A1A1A; outline: none; background: #FAFAF8;
+    }
+    .input-lg:focus { border-color: #2D6A4F; }
+
+    /* Button */
+    .calc-btn {
+      width: 100%; padding: 14px; background: #1A1A1A; color: #FFF;
+      border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+      font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .calc-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Results */
+    .results { margin-top: 28px; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .results-divider {
+      width: 40px; height: 3px; border-radius: 2px;
+      background: #2D6A4F; margin: 0 auto 20px;
+    }
+    .results-title {
+      font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600;
+      text-align: center; color: #1A1A1A; margin-bottom: 20px;
+    }
+
+    /* Bar */
+    .bar-track {
+      height: 10px; border-radius: 5px; background: #F3EAFF; overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%; border-radius: 5px; background: #2D6A4F;
+      transition: width 0.6s ease;
+    }
+    .bar-labels { display: flex; justify-content: space-between; margin-top: 6px; margin-bottom: 20px; }
+    .bar-label { font-size: 12px; font-weight: 600; }
+    .bar-label-t { color: #2D6A4F; }
+    .bar-label-a { color: #9B5DE5; }
+
+    /* Result Cards */
+    .results-cards { display: flex; gap: 14px; margin-bottom: 16px; }
+    .result-card { flex: 1; border-radius: 16px; overflow: hidden; }
+    .result-card-t { background: #E8F5EE; }
+    .result-card-a { background: #F3EAFF; }
+    .result-accent { height: 4px; }
+    .accent-t { background: #2D6A4F; }
+    .accent-a { background: #9B5DE5; }
+    .result-inner {
+      padding: 16px 14px 18px; display: flex; flex-direction: column;
+      align-items: center; gap: 2px;
+    }
+    .result-name {
+      font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .name-t { color: #2D6A4F; }
+    .name-a { color: #9B5DE5; }
+    .result-amount {
+      font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700;
+      color: #1A1A1A; line-height: 1.2;
+    }
+    .result-pct { font-size: 12px; color: #888; }
+
+    /* Total Row */
+    .total-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px; background: #FFFFFF; border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 16px;
+    }
+    .total-label {
+      font-size: 13px; font-weight: 600; color: #888;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .total-value {
+      font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: #1A1A1A;
+    }
+
+    /* Reset */
+    .reset-btn {
+      display: block; margin: 0 auto; padding: 10px 28px;
+      background: transparent; border: 1.5px solid #CCC; border-radius: 10px;
+      font-size: 13px; font-weight: 600; color: #888; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Saved indicator */
+    .saved-badge {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      color: #2D6A4F; background: #E8F5EE; border-radius: 4px;
+      padding: 2px 7px; margin-left: 8px; vertical-align: middle;
+    }
+
+    /* Toggle */
+    .toggle-wrap {
+      display: flex; justify-content: center; margin-bottom: 20px;
+      background: #F0EDE8; border-radius: 12px; padding: 4px;
+    }
+    .toggle-btn {
+      flex: 1; padding: 10px 16px; border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; transition: all 0.2s; background: transparent; color: #888;
+    }
+    .toggle-btn.active {
+      background: #FFFFFF; color: #1A1A1A;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .income-row.hidden {
+      max-height: 0; overflow: hidden; margin: 0; opacity: 0;
+      transition: max-height 0.3s, opacity 0.2s, margin 0.3s;
+    }
+    .income-row.visible {
+      max-height: 200px; opacity: 1;
+      transition: max-height 0.3s, opacity 0.3s 0.1s, margin 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Equity Split</h1>
+      <p id="subtitle">Income-proportional payment calculator</p>
+    </div>
+
+    <div class="card">
+      <div class="toggle-wrap">
+        <button class="toggle-btn active" id="toggle-equity">Equity Split</button>
+        <button class="toggle-btn" id="toggle-5050">50 / 50</button>
+      </div>
+      <div class="income-row visible" id="income-row">
+        <!-- Tyler -->
+        <div class="income-card">
+          <div class="income-card-header">
+            <div class="avatar avatar-t">T</div>
+            <span class="income-label">Tyler's Income</span>
+          </div>
+          <div class="input-wrap">
+            <span class="dollar-sm">$</span>
+            <input type="text" inputmode="decimal" placeholder="0.00" id="tyler-income" class="input-sm">
+          </div>
+          <span class="hint">Monthly or annual — just be consistent</span>
+        </div>
+        <!-- Ashley -->
+        <div class="income-card">
+          <div class="income-card-header">
+            <div class="avatar avatar-a">A</div>
+            <span class="income-label">Ashley's Income</span>
+          </div>
+          <div class="input-wrap">
+            <span class="dollar-sm">$</span>
+            <input type="text" inputmode="decimal" placeholder="0.00" id="ashley-income" class="input-sm">
+          </div>
+          <span class="hint">Monthly or annual — just be consistent</span>
+        </div>
+      </div>
+
+      <div class="expense-block">
+        <label class="expense-label">Total Expense</label>
+        <div class="input-wrap">
+          <span class="dollar-lg">$</span>
+          <input type="text" inputmode="decimal" placeholder="0.00" id="expense" class="input-lg">
+        </div>
+      </div>
+
+      <button class="calc-btn" id="calc-btn" disabled>Calculate Split</button>
+    </div>
+
+    <div class="results" id="results" style="display:none;">
+      <div class="results-divider"></div>
+      <h2 class="results-title">The Split</h2>
+
+      <div>
+        <div class="bar-track"><div class="bar-fill" id="bar-fill"></div></div>
+        <div class="bar-labels">
+          <span class="bar-label bar-label-t" id="bar-label-t"></span>
+          <span class="bar-label bar-label-a" id="bar-label-a"></span>
+        </div>
+      </div>
+
+      <div class="results-cards">
+        <div class="result-card result-card-t">
+          <div class="result-accent accent-t"></div>
+          <div class="result-inner">
+            <span class="result-name name-t">Tyler pays</span>
+            <span class="result-amount" id="tyler-amount"></span>
+            <span class="result-pct" id="tyler-pct-label"></span>
+          </div>
+        </div>
+        <div class="result-card result-card-a">
+          <div class="result-accent accent-a"></div>
+          <div class="result-inner">
+            <span class="result-name name-a">Ashley pays</span>
+            <span class="result-amount" id="ashley-amount"></span>
+            <span class="result-pct" id="ashley-pct-label"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="total-row">
+        <span class="total-label">Total</span>
+        <span class="total-value" id="total-value"></span>
+      </div>
+
+      <button class="reset-btn" id="reset-btn">Start Over</button>
+    </div>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const tylerEl = $('tyler-income');
+    const ashleyEl = $('ashley-income');
+    const expenseEl = $('expense');
+    const calcBtn = $('calc-btn');
+    const resultsEl = $('results');
+    const incomeRow = $('income-row');
+    const toggleEquity = $('toggle-equity');
+    const toggle5050 = $('toggle-5050');
+    const subtitleEl = $('subtitle');
+
+    let mode = 'equity'; // 'equity' or '5050'
+
+    const STORAGE_KEY = 'equity-split-incomes';
+
+    // Load saved incomes (defaults if nothing saved yet)
+    const DEFAULT_TYLER = '100,000';
+    const DEFAULT_ASHLEY = '62,441.6';
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (saved) {
+        tylerEl.value = saved.tyler || DEFAULT_TYLER;
+        ashleyEl.value = saved.ashley || DEFAULT_ASHLEY;
+      } else {
+        tylerEl.value = DEFAULT_TYLER;
+        ashleyEl.value = DEFAULT_ASHLEY;
+      }
+    } catch(e) {
+      tylerEl.value = DEFAULT_TYLER;
+      ashleyEl.value = DEFAULT_ASHLEY;
+    }
+
+    function setMode(m) {
+      mode = m;
+      resultsEl.style.display = 'none';
+      if (m === '5050') {
+        toggleEquity.classList.remove('active');
+        toggle5050.classList.add('active');
+        incomeRow.classList.remove('visible');
+        incomeRow.classList.add('hidden');
+        subtitleEl.textContent = 'Even split payment calculator';
+      } else {
+        toggle5050.classList.remove('active');
+        toggleEquity.classList.add('active');
+        incomeRow.classList.remove('hidden');
+        incomeRow.classList.add('visible');
+        subtitleEl.textContent = 'Income-proportional payment calculator';
+      }
+      checkReady();
+    }
+
+    toggleEquity.addEventListener('click', () => setMode('equity'));
+    toggle5050.addEventListener('click', () => setMode('5050'));
+
+    function saveIncomes() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          tyler: tylerEl.value,
+          ashley: ashleyEl.value,
+        }));
+      } catch(e) {}
+    }
+
+    function cleanNum(str) {
+      return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    function filterInput(e) {
+      let raw = e.target.value.replace(/[^0-9.]/g, '');
+      let parts = raw.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      e.target.value = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+    }
+
+    function checkReady() {
+      const te = cleanNum(expenseEl.value);
+      if (mode === '5050') {
+        calcBtn.disabled = !(te > 0);
+      } else {
+        const ti = cleanNum(tylerEl.value);
+        const ai = cleanNum(ashleyEl.value);
+        calcBtn.disabled = !(ti > 0 && ai > 0 && te > 0);
+      }
+    }
+
+    function fmtCurrency(v) {
+      return v.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
+    }
+
+    function fmtPct(v) {
+      return (v * 100).toFixed(1) + '%';
+    }
+
+    tylerEl.addEventListener('input', (e) => { filterInput(e); checkReady(); saveIncomes(); resultsEl.style.display = 'none'; });
+    ashleyEl.addEventListener('input', (e) => { filterInput(e); checkReady(); saveIncomes(); resultsEl.style.display = 'none'; });
+    expenseEl.addEventListener('input', (e) => { filterInput(e); checkReady(); resultsEl.style.display = 'none'; });
+
+    calcBtn.addEventListener('click', () => {
+      const te = cleanNum(expenseEl.value);
+      if (te <= 0) return;
+
+      let tPct, aPct;
+      if (mode === '5050') {
+        tPct = 0.5;
+        aPct = 0.5;
+      } else {
+        const ti = cleanNum(tylerEl.value);
+        const ai = cleanNum(ashleyEl.value);
+        if (ti <= 0 || ai <= 0) return;
+        const total = ti + ai;
+        tPct = ti / total;
+        aPct = ai / total;
+      }
+
+      const tShare = te * tPct;
+      const aShare = te * aPct;
+
+      $('bar-fill').style.width = fmtPct(tPct);
+      $('bar-label-t').textContent = 'Tyler ' + fmtPct(tPct);
+      $('bar-label-a').textContent = 'Ashley ' + fmtPct(aPct);
+      $('tyler-amount').textContent = fmtCurrency(tShare);
+      $('ashley-amount').textContent = fmtCurrency(aShare);
+      $('tyler-pct-label').textContent = fmtPct(tPct) + ' of total';
+      $('ashley-pct-label').textContent = fmtPct(aPct) + ' of total';
+      $('total-value').textContent = fmtCurrency(te);
+
+      resultsEl.style.display = 'block';
+      setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    });
+
+    $('reset-btn').addEventListener('click', () => {
+      expenseEl.value = '';
+      resultsEl.style.display = 'none';
+      calcBtn.disabled = true;
+    });
+
+    // Initial check in case incomes were loaded from storage
+    checkReady();
+  </script>
+</body>
+</html>
