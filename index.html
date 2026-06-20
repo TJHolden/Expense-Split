@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Equity Split</title>
+  <title>Expense Split</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='78' font-size='80' text-anchor='middle'>⚖️</text></svg>">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,8 +50,8 @@
       display: flex; align-items: center; justify-content: center;
       color: #fff; font-size: 13px; font-weight: 700; flex-shrink: 0;
     }
-    .avatar-t { background: #2D6A4F; }
-    .avatar-a { background: #9B5DE5; }
+    .avatar-t { background: #2563EB; }
+    .avatar-a { background: #E84393; }
     .income-label { font-size: 13px; font-weight: 600; color: #333; }
     .input-wrap { position: relative; display: flex; align-items: center; }
     .dollar-sm {
@@ -65,7 +65,7 @@
       outline: none; background: #FAFAF8;
       transition: border-color 0.2s;
     }
-    .input-sm:focus { border-color: #2D6A4F; }
+    .input-sm:focus { border-color: #2563EB; }
     .hint { font-size: 10.5px; color: #AAA; margin-top: 4px; display: block; }
 
     /* Expense */
@@ -81,7 +81,7 @@
       font-family: 'DM Sans', sans-serif; font-weight: 600;
       color: #1A1A1A; outline: none; background: #FAFAF8;
     }
-    .input-lg:focus { border-color: #2D6A4F; }
+    .input-lg:focus { border-color: #2563EB; }
 
     /* Button */
     .calc-btn {
@@ -97,7 +97,7 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .results-divider {
       width: 40px; height: 3px; border-radius: 2px;
-      background: #2D6A4F; margin: 0 auto 20px;
+      background: #2563EB; margin: 0 auto 20px;
     }
     .results-title {
       font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600;
@@ -106,25 +106,25 @@
 
     /* Bar */
     .bar-track {
-      height: 10px; border-radius: 5px; background: #F3EAFF; overflow: hidden;
+      height: 10px; border-radius: 5px; background: #FDE8F0; overflow: hidden;
     }
     .bar-fill {
-      height: 100%; border-radius: 5px; background: #2D6A4F;
+      height: 100%; border-radius: 5px; background: #2563EB;
       transition: width 0.6s ease;
     }
     .bar-labels { display: flex; justify-content: space-between; margin-top: 6px; margin-bottom: 20px; }
     .bar-label { font-size: 12px; font-weight: 600; }
-    .bar-label-t { color: #2D6A4F; }
-    .bar-label-a { color: #9B5DE5; }
+    .bar-label-t { color: #2563EB; }
+    .bar-label-a { color: #E84393; }
 
     /* Result Cards */
     .results-cards { display: flex; gap: 14px; margin-bottom: 16px; }
     .result-card { flex: 1; border-radius: 16px; overflow: hidden; }
-    .result-card-t { background: #E8F5EE; }
-    .result-card-a { background: #F3EAFF; }
+    .result-card-t { background: #DBEAFE; }
+    .result-card-a { background: #FDE8F0; }
     .result-accent { height: 4px; }
-    .accent-t { background: #2D6A4F; }
-    .accent-a { background: #9B5DE5; }
+    .accent-t { background: #2563EB; }
+    .accent-a { background: #E84393; }
     .result-inner {
       padding: 16px 14px 18px; display: flex; flex-direction: column;
       align-items: center; gap: 2px;
@@ -132,8 +132,8 @@
     .result-name {
       font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
     }
-    .name-t { color: #2D6A4F; }
-    .name-a { color: #9B5DE5; }
+    .name-t { color: #2563EB; }
+    .name-a { color: #E84393; }
     .result-amount {
       font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700;
       color: #1A1A1A; line-height: 1.2;
@@ -165,7 +165,7 @@
     /* Saved indicator */
     .saved-badge {
       display: inline-block; font-size: 10px; font-weight: 600;
-      color: #2D6A4F; background: #E8F5EE; border-radius: 4px;
+      color: #2563EB; background: #DBEAFE; border-radius: 4px;
       padding: 2px 7px; margin-left: 8px; vertical-align: middle;
     }
 
@@ -196,7 +196,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Equity Split</h1>
+      <h1>Expense Split</h1>
       <p id="subtitle">Income-proportional payment calculator</p>
     </div>
 
